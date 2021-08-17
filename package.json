@@ -1,0 +1,36 @@
+{
+	"name": "zhuilong",
+	"version": "1.0.0",
+	"description": "",
+	"main": "src/index.ts",
+	"scripts": {
+		"start": "ts-node ./",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/iii8iii/zhuilong.git"
+	},
+	"keywords": [],
+	"author": "iii8iii",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/iii8iii/zhuilong/issues"
+	},
+	"homepage": "https://github.com/iii8iii/zhuilong#readme",
+	"devDependencies": {
+		"@types/bree": "^6.2.1",
+		"@types/node": "^16.4.13",
+		"tslib": "^2.3.0"
+	},
+	"dependencies": {
+		"@iii8iii/thsbot": "^0.3.0",
+		"@iii8iii/wechatbot": "^0.2.0",
+		"@types/lodash": "^4.14.172",
+		"bree": "^6.2.1",
+		"dotenv": "^10.0.0",
+		"lodash": "^4.17.21",
+		"playwright-firefox": "^1.13.1",
+		"ts-node": "^10.2.0"
+	}
+}
