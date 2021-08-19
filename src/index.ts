@@ -1,11 +1,12 @@
 import { Browser, BrowserContext, firefox } from 'playwright-firefox';
 import { thsBot } from '@iii8iii/thsbot';
 import { Instance } from "./instance";
-import { union } from "lodash";
+import { unionBy } from "lodash";
 import { job } from "./types";
 
-import dotenv from "dotenv";
-dotenv.config();
+import { resolve } from "path";
+import { config } from "dotenv";
+config({ path: resolve(__dirname, '.env') });
 
 export class Zhuilong {
   private botUrls: string[];
@@ -30,13 +31,13 @@ export class Zhuilong {
     }
   }
 
-  async new(id: string, password: string, jobs: job[]): Promise<Instance> {
+  async new(id: string, password: string, jobs: job[] = []): Promise<Instance> {
     try {
       if (!this.instances.has(id)) {
         const browser: Browser = await this.initBrowser();
         const ctx: BrowserContext = await browser.newContext();
         const ths: thsBot = new thsBot(ctx, id, password, this.botUrls);
-        jobs = union(this.jobs, jobs);
+        jobs = unionBy(this.jobs, jobs, 'name');
         const instance: Instance = new Instance(ths, jobs);
         this.instances.set(id, instance);
       }
@@ -97,7 +98,11 @@ export class Zhuilong {
 }
 
 (async () => {
-  const zl = new Zhuilong();
-  const i = await zl.new(process.env.USER as string, process.env.USERPSW as string, [{ name: 'test', path: 'src/jobs/updateThs.ts', interval: 'every 10 seconds' }]);
-  i.start();
+  const zl = new Zhuilong([
+    { name: 'morning', path: 'src/jobs/updateThs.ts', interval: 'every 10 seconds' },
+    { name: 'afternoon', path: 'src/jobs/updateThs.ts', interval: 'every 10 seconds' }
+  ]);
+  await zl.new(process.env.USER as string, process.env.USERPSW as string);
+  zl.startAll();
 })();
+
