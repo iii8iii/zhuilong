@@ -1,3 +1,3 @@
-export interface job { name: string, path: string, interval: string, }
-import { thsBot } from '@iii8iii/thsbot';
-import Bree from "bree";
+import { MessagePort } from "worker_threads";
+export interface job { name: string, path: string, interval: string, from?: string, to?: string, linkTo?: string[]; }
+export interface port { [x: string]: MessagePort; }

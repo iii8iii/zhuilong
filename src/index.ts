@@ -1,5 +1,6 @@
 import { Browser, BrowserContext, firefox } from 'playwright-firefox';
 import { thsBot } from '@iii8iii/thsbot';
+import { WechatBot } from "@iii8iii/wechatbot";
 import { Instance } from "./instance";
 import { unionBy } from "lodash";
 import { job } from "./types";
@@ -9,12 +10,15 @@ import { config } from "dotenv";
 config({ path: resolve(__dirname, '.env') });
 
 export class Zhuilong {
-  private botUrls: string[];
+  private bot: WechatBot | undefined;
   private brower: Browser | undefined;
   private instances: Map<string, Instance> = new Map();
   private jobs: job[];
   constructor(jobs?: job[]) {
-    this.botUrls = process.env.botUrls?.split(',') || [];
+    const botUrls = process.env.botUrls?.split(',') || [];
+    if (botUrls.length) {
+      this.bot = new WechatBot(botUrls);
+    }
     this.jobs = jobs || [];
   }
 
@@ -22,6 +26,9 @@ export class Zhuilong {
     try {
       const hdl = process.env.NODE_ENV === "production";
       this.brower = this.brower ? this.brower : await firefox.launch({ headless: hdl });
+      this.brower.on('disconnected', () => {
+        console.log('BROWSER OUT');
+      });
       return this.brower;
     } catch (error) {
       console.log('====================================');
@@ -36,7 +43,7 @@ export class Zhuilong {
       if (!this.instances.has(id)) {
         const browser: Browser = await this.initBrowser();
         const ctx: BrowserContext = await browser.newContext();
-        const ths: thsBot = new thsBot(ctx, id, password, this.botUrls);
+        const ths: thsBot = new thsBot(ctx, id, password, this.bot);
         jobs = unionBy(this.jobs, jobs, 'name');
         const instance: Instance = new Instance(ths, jobs);
         this.instances.set(id, instance);
@@ -85,22 +92,12 @@ export class Zhuilong {
   updateJobs(id: string, jobs: job[]) {
     this.instances.get(id)?.updateJobs(jobs);
   }
-
-  async reload(id: string) {
-    try {
-      await this.instances.get(id)?.reload();
-    } catch (error) {
-      console.log('====================================');
-      console.log('ERROR OCURRED IN RELOAD');
-      console.log('====================================');
-    }
-  }
 }
 
 (async () => {
   const zl = new Zhuilong([
-    { name: 'morning', path: 'src/jobs/updateThs.ts', interval: 'every 10 seconds' },
-    { name: 'afternoon', path: 'src/jobs/updateThs.ts', interval: 'every 10 seconds' }
+    { name: 'AM', path: 'src/jobs/index.ts', interval: 'every 10 seconds after 7:00 before 18:30' },
+    { name: 'PM', path: 'src/jobs/index2.ts', interval: 'every 10 seconds after 12:50 before 18:00', linkTo: ['AM'] },
   ]);
   await zl.new(process.env.USER as string, process.env.USERPSW as string);
   zl.startAll();

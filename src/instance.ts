@@ -1,28 +1,54 @@
 import { thsBot } from "@iii8iii/thsbot";
+import { Worker, MessageChannel } from "worker_threads";
 import { shedule } from "./jobs";
-import { job } from "./types";
+import { job, port } from "./types";
 import Bree from 'bree';
+
 export class Instance {
   private shedule: Bree;
   private ths: thsBot;
+  private jobs: job[];
   constructor(ths: thsBot, jobs: job[]) {
     this.ths = ths;
-    this.shedule = shedule(jobs, this.handler.bind(this));
+    this.jobs = jobs;
+    this.shedule = shedule(jobs, this.ths.update.bind(this.ths));
+    this.shedule.on('worker created', (name) => {
+      const ws = this.shedule.workers;
+      const j = this.jobs.find(v => v.name === name) as job;
+      const { linkTo } = j;
+      if (linkTo && linkTo.length) {
+        for (const l of linkTo) {
+          const wl = ws[l as keyof object] as Worker | undefined;
+          if (wl) {
+            const { port1, port2 } = new MessageChannel();
+
+            let o: port = {};
+            o[`port2${name}`] = port1;
+            wl.postMessage(o, [port1]);
+
+            let n: port = {};
+            n[`port2${l}`] = port2;
+            const wn = ws[name as keyof object] as Worker;
+            wn.postMessage(n, [port2]);
+          }
+        }
+      }
+    });
   }
-  async handler(msg: { name: string, message: string[]; }) {
-    await this.ths.update(msg.message);
-  }
+
   start() {
-    this.shedule.start();
+    try {
+      this.shedule.start();
+    } catch (error) {
+      console.log(error);
+    }
   }
-  stop() {
-    this.shedule.stop();
-  }
-  updateJobs(jobs: job[]) {
-    this.shedule = shedule(jobs, this.handler.bind(this));
-  }
-  async reload() {
+  async stop() {
     await this.shedule.stop();
-    this.shedule.start();
+  }
+  async updateJobs(jobs: job[]) {
+    await this.shedule.stop();
+    this.shedule = shedule(jobs, this.ths.update.bind(this.ths));
+    this.start();
   }
 }
