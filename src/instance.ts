@@ -1,7 +1,7 @@
-import { thsBot } from "@iii8iii/thsbot";
 import { Worker, MessageChannel } from "worker_threads";
-import { shedule } from "./jobs";
+import { thsBot } from "@iii8iii/thsbot";
 import { job, port } from "./types";
+import { shedule } from "./jobs";
 import Bree from 'bree';
 
 export class Instance {
@@ -23,11 +23,11 @@ export class Instance {
             const { port1, port2 } = new MessageChannel();
 
             let o: port = {};
-            o[`port2${name}`] = port1;
+            o[`${l}2${name}`] = port1;
             wl.postMessage(o, [port1]);
 
             let n: port = {};
-            n[`port2${l}`] = port2;
+            n[`${name}2${l}`] = port2;
             const wn = ws[name as keyof object] as Worker;
             wn.postMessage(n, [port2]);
           }

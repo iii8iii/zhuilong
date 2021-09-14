@@ -1,4 +1,5 @@
 import { parentPort } from "worker_threads";
+import { dfcfBot } from "@iii8iii/dfcfbot";
 import { difference } from "lodash";
 import { port } from "../types";
 
@@ -23,4 +24,9 @@ export const ready = async (ports: string[]) => {
   await p;
 
   return messagePorts;
+};
+
+export const delzt = async (codes: string[]){
+  const ztStocksCodes = getStockCode(await dfcfBot.getZtStocksInfo());
+  return difference(codes, ztStocksCodes);
 };

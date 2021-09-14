@@ -96,8 +96,10 @@ export class Zhuilong {
 
 (async () => {
   const zl = new Zhuilong([
-    { name: 'AM', path: 'src/jobs/index.ts', interval: 'every 10 seconds after 7:00 before 18:30' },
-    { name: 'PM', path: 'src/jobs/index2.ts', interval: 'every 10 seconds after 12:50 before 18:00', linkTo: ['AM'] },
+    { name: 'WA', path: 'src/jobs/week.ts', interval: 'at 8:30 every weekday', cwams: '6.5hrs', linkTo: ['DA'] },
+    { name: 'DA', path: 'src/jobs/day.ts', interval: 'at 9:00 every weekday', cwams: '6h', linkTo: ['MA', 'WA'] },
+    { name: 'MA', path: 'src/jobs/min.ts', interval: 'at 9:00 every weekday', cwams: '6h', linkTo: ['UD', 'DA'] },
+    { name: 'UD', path: 'src/jobs/update.ts', interval: 'at 9:30 every weekday', cwams: '5.5hrs', linkTo: ['MA'] },
   ]);
   await zl.new(process.env.USER as string, process.env.USERPSW as string);
   zl.startAll();

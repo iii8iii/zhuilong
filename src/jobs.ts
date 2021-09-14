@@ -1,5 +1,7 @@
 import { job } from "./types";
+import ms from "ms";
 import Bree from "bree";
+import { stringify } from 'querystring';
 
 function typescript_worker() {
 	const path = require('path');
@@ -11,17 +13,20 @@ function typescript_worker() {
 export function shedule(jobs: job[], handler: (message: any) => void): Bree {
 	let buildJobs: any[] = [];
 	jobs.forEach(job => {
-		buildJobs.push({
+		let w = {
 			name: job.name,
-			interval: `${job.interval} every weekday`,
-			timeout: 0,
-			path: typescript_worker,
 			worker: { workerData: { __filename: job.path } },
-		});
+			path: typescript_worker,
+			closeWorkerAfterMs: job.cwams ? ms(job.cwams) : 0,
+			interval: job.interval,
+		};
+		buildJobs.push(w);
 	});
 	return new Bree({
 		root: false,
 		jobs: buildJobs,
-		workerMessageHandler: handler
+		workerMessageHandler: (msg) => {
+			handler(msg.message);
+		}
 	});
 }
