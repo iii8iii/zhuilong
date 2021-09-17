@@ -1,6 +1,7 @@
 import { Worker, MessageChannel } from "worker_threads";
 import { thsBot } from "@iii8iii/thsbot";
 import { Job, Port } from "./types";
+import { msToEnd } from "./utils";
 import { shedule } from "./jobs";
 import Bree from 'bree';
 
@@ -15,6 +16,8 @@ export class Instance {
     this.shedule.on('worker created', (name) => {
       const ws = this.shedule.workers;
       const j = this.jobs.find(v => v.name === name) as Job;
+
+      //try to connet workers with messageChannel
       const { linkTo } = j;
       if (linkTo && linkTo.length) {
         for (const l of linkTo) {
@@ -33,6 +36,16 @@ export class Instance {
           }
         }
       }
+
+      //try to stop the worker at the endTime
+      //TODO need to test
+      const { end } = j;
+      const w = ws[name as keyof object] as Worker;
+      w.on('online', () => {
+        (this.shedule.closeWorkerAfterMs[name as keyof object] as any) = setTimeout(() => {
+          w.terminate();
+        }, msToEnd(end));
+      });
     });
   }
 

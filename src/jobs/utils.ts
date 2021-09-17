@@ -1,7 +1,7 @@
 import { parentPort } from "worker_threads";
-import { dfcfBot } from "@iii8iii/dfcfbot";
+import { getZtStocksInfo } from "@iii8iii/dfcfbot";
 import { difference } from "lodash";
-import { port } from "../types";
+import { Port } from "../types";
 
 export const getStockCode = (data: { c: string; }[]) => {
   const stockCodes: string[] = [];
@@ -10,7 +10,7 @@ export const getStockCode = (data: { c: string; }[]) => {
 };
 
 export const ready = async (ports: string[]) => {
-  let messagePorts: port = {};
+  let messagePorts: Port = {};
   const p: Promise<void> = new Promise(resolve => {
     if (parentPort) {
       parentPort.on('message', msg => {
@@ -27,6 +27,6 @@ export const ready = async (ports: string[]) => {
 };
 
 export const delzt = async (codes: string[]) => {
-  const ztStocksCodes = getStockCode(await dfcfBot.getZtStocksInfo());
+  const ztStocksCodes = getStockCode(await getZtStocksInfo());
   return difference(codes, ztStocksCodes);
 };
