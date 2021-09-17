@@ -10,7 +10,7 @@ import { dfcfBot } from "@iii8iii/dfcfbot";
     let t = setInterval(async () => {
       result = await delzt(result);
       ports.MA2UD.postMessage(result);
-    }, 1000);
+    }, 500);
 
     for (const code of cs) {
       const data = await dfcfBot.getKlineData(code, '60m');

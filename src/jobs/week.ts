@@ -1,7 +1,7 @@
 import { ready, getStockCode, delzt } from "./utils";
 import { clearInterval, setInterval } from 'timers';
-import { analysts } from "@iii8iii/analysts";
-import { dfcfBot } from "@iii8iii/dfcfbot";
+import { macdTrend } from "@iii8iii/analysts";
+import { getQsStocksInfo, getKlineData } from "@iii8iii/dfcfbot";
 import { difference, union } from 'lodash';
 
 (async () => {
@@ -12,19 +12,25 @@ import { difference, union } from 'lodash';
 		let t = setInterval(async () => {
 			result = await delzt(result);
 			ports.WA2DA.postMessage(result);
-		}, 1000);
+		}, 500);
 
-		const qsStocks = await dfcfBot.getQsStocksInfo(300);
-		const qsStocksCodes: string[] = getStockCode(qsStocks.filter(v => v.ltsz > 10 * 100000000 && v.p / 100 > 8 && v.nh));
-		const codes = await delzt(qsStocksCodes);
-		for (const code of codes) {
-			const data = await dfcfBot.getKlineData(code, 'W');
-			if (data && analysts.macdTrend(data)) {
-				result = union(result, [code]);
-			} else {
-				result = difference(result, [code]);
+		try {
+			const qsStocks = await getQsStocksInfo();
+			const qsStocksCodes: string[] = getStockCode(qsStocks.filter(v => v.ltsz > 10 * 100000000 && v.p / 100 > 8));
+			const codes = await delzt(qsStocksCodes);
+
+			for (const code of codes) {
+				const data = await getKlineData(code, 'W');
+				if (data && macdTrend(data)) {
+					result = union(result, [code]);
+				} else {
+					result = difference(result, [code]);
+				}
 			}
+		} catch (error) {
+			console.log('error:', error);
 		}
+
 		clearInterval(t);
 	} while (true);
 })();

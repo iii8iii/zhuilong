@@ -12,7 +12,7 @@ import { clearInterval } from 'timers';
     let t = setInterval(async () => {
       result = await delzt(result);
       ports.DA2MA.postMessage(result);
-    }, 1000);
+    }, 500);
 
     for (const code of cs) {
       const data = await dfcfBot.getKlineData(code, 'D');

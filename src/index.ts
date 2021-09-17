@@ -3,7 +3,7 @@ import { thsBot } from '@iii8iii/thsbot';
 import { WechatBot } from "@iii8iii/wechatbot";
 import { Instance } from "./instance";
 import { unionBy } from "lodash";
-import { job } from "./types";
+import { Job } from "./types";
 
 import { resolve } from "path";
 import { config } from "dotenv";
@@ -13,8 +13,8 @@ export class Zhuilong {
   private bot: WechatBot | undefined;
   private brower: Browser | undefined;
   private instances: Map<string, Instance> = new Map();
-  private jobs: job[];
-  constructor(jobs?: job[]) {
+  private jobs: Job[];
+  constructor(jobs?: Job[]) {
     const botUrls = process.env.botUrls?.split(',') || [];
     if (botUrls.length) {
       this.bot = new WechatBot(botUrls);
@@ -26,9 +26,6 @@ export class Zhuilong {
     try {
       const hdl = process.env.NODE_ENV === "production";
       this.brower = this.brower ? this.brower : await firefox.launch({ headless: hdl });
-      this.brower.on('disconnected', () => {
-        console.log('BROWSER OUT');
-      });
       return this.brower;
     } catch (error) {
       console.log('====================================');
@@ -38,7 +35,7 @@ export class Zhuilong {
     }
   }
 
-  async new(id: string, password: string, jobs: job[] = []): Promise<Instance> {
+  async new(id: string, password: string, jobs: Job[] = []): Promise<Instance> {
     try {
       if (!this.instances.has(id)) {
         const browser: Browser = await this.initBrowser();
@@ -89,17 +86,18 @@ export class Zhuilong {
     }
   }
 
-  updateJobs(id: string, jobs: job[]) {
+  updateJobs(id: string, jobs: Job[]) {
     this.instances.get(id)?.updateJobs(jobs);
   }
 }
 
 (async () => {
   const zl = new Zhuilong([
-    { name: 'WA', path: 'src/jobs/week.ts', interval: 'at 8:30 every weekday', cwams: '6.5hrs', linkTo: ['DA'] },
-    { name: 'DA', path: 'src/jobs/day.ts', interval: 'at 9:00 every weekday', cwams: '6h', linkTo: ['MA', 'WA'] },
-    { name: 'MA', path: 'src/jobs/min.ts', interval: 'at 9:00 every weekday', cwams: '6h', linkTo: ['UD', 'DA'] },
-    { name: 'UD', path: 'src/jobs/update.ts', interval: 'at 9:30 every weekday', cwams: '5.5hrs', linkTo: ['MA'] },
+
+    // { name: 'WA', path: 'src/jobs/week.ts', start: 'at 10:12 ',  linkTo: ['DA'] },
+    // { name: 'DA', path: 'src/jobs/day.ts', start: 'at 10:12 ', linkTo: ['MA', 'WA'] },
+    // { name: 'MA', path: 'src/jobs/min.ts', start: 'at 10:12 ',  linkTo: ['UD', 'DA'] },
+    { name: 'UD', path: 'src/jobs/update.ts', start: 'after 10:12 ', linkTo: ['MA'] },
   ]);
   await zl.new(process.env.USER as string, process.env.USERPSW as string);
   zl.startAll();

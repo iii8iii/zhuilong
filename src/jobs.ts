@@ -1,7 +1,6 @@
-import { job } from "./types";
-import ms from "ms";
+import { Job, Time } from "./types";
+import dayjs from 'dayjs';
 import Bree from "bree";
-import { stringify } from 'querystring';
 
 function typescript_worker() {
 	const path = require('path');
@@ -10,15 +9,23 @@ function typescript_worker() {
 	require(path.resolve(__dirname, workerData.__filename));
 }
 
-export function shedule(jobs: job[], handler: (message: any) => void): Bree {
+function msToEnd(endTime: Time = { h: 15, m: 0, s: 0, ms: 0 }) {
+	const { h, m, s, ms } = endTime;
+	const now = dayjs().valueOf();
+	const end = dayjs().hour(h).minute(m).second(s).millisecond(ms).valueOf();
+	return end > now ? end - now : 0;
+}
+
+export function shedule(jobs: Job[], handler: (message: any) => void): Bree {
 	let buildJobs: any[] = [];
 	jobs.forEach(job => {
 		let w = {
 			name: job.name,
+			timeout: job.start,
 			worker: { workerData: { __filename: job.path } },
 			path: typescript_worker,
-			closeWorkerAfterMs: job.cwams ? ms(job.cwams) : 0,
-			interval: job.interval,
+			closeWorkerAfterMs: msToEnd(job.end),
+			interval: 'every weekday'
 		};
 		buildJobs.push(w);
 	});

@@ -1,4 +1,5 @@
 import { MessagePort } from "worker_threads";
 
-export interface job { name: string, path: string, interval: string, cwams?: string, linkTo?: string[]; }
-export interface port { [x: string]: MessagePort; }
+export interface Job { name: string, path: string, start: string, end?: Time, linkTo?: string[]; }
+export interface Port { [x: string]: MessagePort; }
+export interface Time { h: number, m: number, s: number, ms: number; }

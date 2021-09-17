@@ -26,7 +26,7 @@ export const ready = async (ports: string[]) => {
   return messagePorts;
 };
 
-export const delzt = async (codes: string[]){
+export const delzt = async (codes: string[]) => {
   const ztStocksCodes = getStockCode(await dfcfBot.getZtStocksInfo());
   return difference(codes, ztStocksCodes);
 };
