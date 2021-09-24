@@ -38,7 +38,6 @@ export class Instance {
       }
 
       //try to stop the worker at the endTime
-      //TODO need to test
       const { end } = j;
       const w = ws[name as keyof object] as Worker;
       w.on('online', () => {
