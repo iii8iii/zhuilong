@@ -19,7 +19,6 @@ import { clearInterval, setInterval } from 'timers';
     for (const code of getStockCode(qs)) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
-
       if (dData && wData && macdTrend(wData) && macdTrend(dData)) {
         result = union(result, [code]);
       } else {
