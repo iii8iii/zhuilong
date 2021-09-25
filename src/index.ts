@@ -91,6 +91,8 @@ export class Zhuilong {
   }
 }
 
+
+//make a test
 (async () => {
   const zl = new Zhuilong([
     { name: 'GD', path: 'src/jobs/JgetData.ts', start: 'after 9:25 ', linkTo: ['MR'], end: { h: 17, m: 0 } },
