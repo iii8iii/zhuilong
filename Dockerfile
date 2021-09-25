@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/playwright
+
 #TZ
 RUN apt-get update -y
 RUN apt-get install -y tzdata
@@ -14,7 +15,7 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN npm ci
+RUN npm i
 # If you are building your code for production
 # RUN npm ci
 

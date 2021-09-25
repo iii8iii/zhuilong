@@ -8,7 +8,7 @@ function typescript_worker() {
 	require(path.resolve(__dirname, workerData.__filename));
 }
 
-export function shedule(jobs: Job[], handler: (message: any) => void): Bree {
+export function shedule(jobs: Job[], handler: (message: any, c: string) => void): Bree {
 	let buildJobs: any[] = [];
 	jobs.forEach(job => {
 		let w = {
@@ -24,7 +24,7 @@ export function shedule(jobs: Job[], handler: (message: any) => void): Bree {
 		root: false,
 		jobs: buildJobs,
 		workerMessageHandler: (msg) => {
-			handler(msg.message);
+			handler(msg.message, '399006');
 		}
 	});
 }

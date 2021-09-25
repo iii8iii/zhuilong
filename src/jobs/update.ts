@@ -4,9 +4,9 @@ import { ready } from "./utils";
 import { take, union } from 'lodash';
 
 (async () => {
-	//添加茅台，好在任务一启动时就先登录THS
+	//添加创业指数，好在任务一启动时就先登录THS
 	if (parentPort) {
-		parentPort.postMessage(['600519']);
+		parentPort.postMessage(['399006']);
 	}
 	let codes: string[] = [];
 	const ports = await ready(['UD2MR']);
