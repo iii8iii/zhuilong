@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "src/index.ts",
 	"scripts": {
-		"start": "ts-node ./"
+		"start": "ts-node ."
 	},
 	"repository": {
 		"type": "git",
@@ -24,7 +24,7 @@
 		"tslib": "^2.3.1",
 		"@iii8iii/analysts": "latest",
 		"@iii8iii/dfcfbot": "latest",
-		"@iii8iii/thsbot": "^1.1.0",
+		"@iii8iii/thsbot": "latest",
 		"@iii8iii/wechatbot": "latest",
 		"@types/lodash": "^4.14.174",
 		"bree": "^6.3.1",
