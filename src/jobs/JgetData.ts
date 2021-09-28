@@ -10,28 +10,22 @@ import { stockData } from "../types";
   let result: stockData = { zt: [], zzt: [], qs: [] };
   do {
     const TpostMsg = setInterval(async () => {
-      ports.GD2MR.postMessage(result);
+      ports["GD2MR"]?.postMessage(result);
     }, 500);
-
-    const Tdelzt = setInterval(async () => {
-      result.zzt = delzt(result.zt, result.zzt);
-      result.qs = delzt(result.zt, result.qs);
-    }, 30 * 1000);
 
     try {
       const zt = await getZtStocksInfo();
       result.zt = zt.length ? zt : result.zt;
       const zzt = await getZuoZtStocksInfo();
-      result.zzt = zzt.length ? zzt : result.zzt;
+      result.zzt = zzt.length ? delzt(zt, zzt) : result.zzt;
       const qs = await getQsStocksInfo(300);
-      result.qs = qs.length ? qs : result.qs;
+      result.qs = qs.length ? delzt(zt, qs) : result.qs;
     } catch (error) {
       console.log('error:', error);
     }
 
     //finish the loop and have a rest before next loop
     await sleep();
-    clearInterval(Tdelzt);
     clearInterval(TpostMsg);
   } while (true);
 })();

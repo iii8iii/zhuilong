@@ -1,21 +1,24 @@
-import { difference, union } from 'lodash';
+import { difference, union, unionBy } from 'lodash';
 import { getKlineData } from "@iii8iii/dfcfbot";
 import { macdTrend } from "@iii8iii/analysts";
 import { qsItem } from "@iii8iii/dfcfbot/dist/types";
-import { ready, getStockCode, sleep } from "./utils";
+import { ready, getStockCode, run } from "./utils";
 import { clearInterval, setInterval } from 'timers';
 
 (async () => {
   const ports = await ready(['MR2GD', 'MR2UD']);
   let result: string[] = [];
+  let qs: qsItem[] = [];
 
-  ports.MR2GD.on('message', async (data) => {
-    let qs: qsItem[] = data.qs;
+  ports["MR2GD"]?.on('message', async (data) => {
+    qs = unionBy(qs, data.qs, 'c');
     qs = qs.filter(v => v.ltsz > 10 * 100000000 && v.p > 800);
-    let t = setInterval(async () => {
-      ports.MR2UD.postMessage(result);
-    }, 500);
+  });
 
+  run(async () => {
+    let t = setInterval(async () => {
+      ports["MR2UD"]?.postMessage(result);
+    }, 500);
     for (const code of getStockCode(qs)) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
@@ -24,6 +27,7 @@ import { clearInterval, setInterval } from 'timers';
       } else {
         result = difference(result, [code]);
       }
+      qs.shift();
     }
     clearInterval(t);
   });

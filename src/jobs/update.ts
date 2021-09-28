@@ -10,7 +10,7 @@ import { take, union } from 'lodash';
 	}
 	let codes: string[] = [];
 	const ports = await ready(['UD2MR']);
-	ports.UD2MR.on('message', (cs) => {
+	ports["UD2MR"]?.on('message', (cs) => {
 		codes = union(cs, codes);
 	});
 	setInterval(() => {

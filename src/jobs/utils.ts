@@ -1,8 +1,8 @@
 import { ztItem, stockItem } from '@iii8iii/dfcfbot/dist/types';
 import { difference, differenceBy } from "lodash";
-import delay from "delay";
 import { parentPort } from "worker_threads";
 import { Port } from "../types";
+import delay from "delay";
 
 
 /**
@@ -62,4 +62,13 @@ export async function sleep(ms: number = 60 * 1000) {
     ms = ms * Math.random();
   } while (!ms);
   await delay(ms);
+}
+
+export async function run(fn: () => Promise<void>) {
+  console.log('running start');
+
+  await fn();
+  setTimeout(() => {
+    run(fn);
+  }, 500);
 }
