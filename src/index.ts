@@ -15,7 +15,7 @@ export class Zhuilong {
   private instances: Map<string, Instance> = new Map();
   private jobs: Job[];
   constructor(jobs?: Job[]) {
-    const botUrls = process.env.botUrls?.split(',') || [];
+    const botUrls = process.env['botUrls']?.split(',') || [];
     if (botUrls.length) {
       this.bot = new WechatBot(botUrls);
     }
@@ -24,7 +24,7 @@ export class Zhuilong {
 
   private async initBrowser(): Promise<Browser> {
     try {
-      const hdl = process.env.NODE_ENV === "production";
+      const hdl = process.env['NODE_ENV'] === "production";
       this.brower = this.brower ? this.brower : await firefox.launch({ headless: hdl });
       return this.brower;
     } catch (error) {
@@ -99,7 +99,7 @@ export class Zhuilong {
     { name: 'MR', path: 'src/jobs/JmorningRace.ts', start: 'after 9:25 ', linkTo: ['GD', 'UD'], end: { h: 17, m: 0 } },
     { name: 'UD', path: 'src/jobs/update.ts', start: 'after 9:25 ', linkTo: ['MR'], end: { h: 17, m: 0 } },
   ]);
-  await zl.new(process.env.USER as string, process.env.USERPSW as string);
+  await zl.new(process.env['USER'] as string, process.env['USERPSW'] as string);
   zl.startAll();
 })();
 

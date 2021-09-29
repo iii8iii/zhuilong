@@ -30,7 +30,6 @@
 		"@types/lodash": "^4.14.174",
 		"bree": "^6.3.1",
 		"dayjs": "^1.10.7",
-		"delay": "^5.0.0",
 		"dotenv": "^10.0.0",
 		"lodash": "^4.17.21",
 		"playwright-firefox": "^1.15.0",

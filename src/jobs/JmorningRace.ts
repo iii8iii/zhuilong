@@ -1,6 +1,6 @@
 import { difference, union, unionBy } from 'lodash';
 import { getKlineData } from "@iii8iii/dfcfbot";
-import { macdTrend } from "@iii8iii/analysts";
+import { bollTrend, kdjTrend, macdTrend } from "@iii8iii/analysts";
 import { qsItem } from "@iii8iii/dfcfbot/dist/types";
 import { ready, getStockCode, run } from "./utils";
 import { clearInterval, setInterval } from 'timers';
@@ -17,12 +17,15 @@ import { clearInterval, setInterval } from 'timers';
 
   run(async () => {
     let t = setInterval(async () => {
-      ports["MR2UD"]?.postMessage(result);
-    }, 500);
+      if (result.length) {
+        ports["MR2UD"]?.postMessage(result);
+      }
+    }, 1000);
+
     for (const code of getStockCode(qs)) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
-      if (dData && wData && macdTrend(wData) && macdTrend(dData)) {
+      if (dData && wData && macdTrend(wData) && bollTrend(wData) && macdTrend(dData) && bollTrend(dData) && kdjTrend(dData)) {
         result = union(result, [code]);
       } else {
         result = difference(result, [code]);

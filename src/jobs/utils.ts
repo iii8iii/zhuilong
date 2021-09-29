@@ -2,7 +2,6 @@ import { ztItem, stockItem } from '@iii8iii/dfcfbot/dist/types';
 import { difference, differenceBy } from "lodash";
 import { parentPort } from "worker_threads";
 import { Port } from "../types";
-import delay from "delay";
 
 
 /**
@@ -52,23 +51,9 @@ export function delzt<T>(zt: ztItem[], items: T[]) {
 };
 
 
-/**
- * 等待一个大致的时间避免有些循环操作太快
- * @param {number} [ms=60 * 1000]
- */
-
-export async function sleep(ms: number = 60 * 1000) {
-  do {
-    ms = ms * Math.random();
-  } while (!ms);
-  await delay(ms);
-}
-
 export async function run(fn: () => Promise<void>) {
-  console.log('running start');
-
   await fn();
   setTimeout(() => {
     run(fn);
-  }, 500);
+  }, 1000);
 }
