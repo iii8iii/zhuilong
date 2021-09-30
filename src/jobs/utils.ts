@@ -46,8 +46,8 @@ export async function ready(ports: string[]) {
  * @param {T[]} items
  * @return {*} 
  */
-export function delzt<T>(zt: ztItem[], items: T[]) {
-  return differenceBy(items, zt, 'c');
+export function clearStocks<T>(zt: ztItem[], tp: stockItem[], items: T[]) {
+  return differenceBy(items, zt, tp, 'c');
 };
 
 

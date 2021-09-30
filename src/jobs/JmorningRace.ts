@@ -24,7 +24,6 @@ import { stockData } from '../types';
         ports["MR2UD"]?.postMessage(result);
       }
     }, 1000);
-    let i = 1;
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
@@ -33,7 +32,6 @@ import { stockData } from '../types';
       } else {
         result = difference(result, [code]);
       }
-      console.log(i++);
       codes.shift();
     }
     clearInterval(t);
