@@ -51,9 +51,9 @@ export function delzt<T>(zt: ztItem[], items: T[]) {
 };
 
 
-export async function run(fn: () => Promise<void>) {
+export async function reRun(fn: () => Promise<void>, msDelay = 1000) {
   await fn();
   setTimeout(() => {
-    run(fn);
-  }, 1000);
+    reRun(fn);
+  }, msDelay);
 }
