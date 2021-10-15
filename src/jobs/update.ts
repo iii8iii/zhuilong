@@ -13,11 +13,12 @@ import { union } from 'lodash';
 		codes = union(cs, codes);
 	});
 	ports["UD2ZJ"]?.on('message', (cs) => {
-		codes = cs;
+		codes = union(cs, codes);
 	});
 	setInterval(() => {
 		if (parentPort) {
 			parentPort.postMessage(codes);
 		}
-	}, 5000);
+		codes.pop();
+	}, 60 * 1000);
 })();
