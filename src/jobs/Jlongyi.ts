@@ -25,7 +25,7 @@ import { stockData } from '../types';
     }, 1000);
     for (const code of codes) {
       const wData = await getKlineData(code, 'W');
-      if (wData && macdTrend(wData, 'UP', 1) && bollTrend(wData, 'UP', 1) && kdjTrend(wData)) {
+      if (wData && macdTrend(wData, 'UP', 2) && bollTrend(wData, 'UP', 2) && kdjTrend(wData)) {
         result = union(result, [code]);
       } else {
         result = difference(result, [code]);
