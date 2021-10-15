@@ -5,9 +5,15 @@ import { union } from 'lodash';
 
 (async () => {
 	let codes: string[] = [];
-	const ports = await ready(['UD2MR']);
-	ports["UD2MR"]?.on('message', (cs) => {
+	const ports = await ready(['UD2LY', 'UD2NM', 'UD2ZJ']);
+	ports["UD2LY"]?.on('message', (cs) => {
 		codes = union(cs, codes);
+	});
+	ports["UD2NM"]?.on('message', (cs) => {
+		codes = union(cs, codes);
+	});
+	ports["UD2ZJ"]?.on('message', (cs) => {
+		codes = cs;
 	});
 	setInterval(() => {
 		if (parentPort) {

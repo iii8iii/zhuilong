@@ -1,33 +1,31 @@
 import { bollTrend, kdjTrend, macdTrend } from "@iii8iii/analysts";
-import { qsItem, stockItem } from "@iii8iii/dfcfbot/dist/types";
+import { stockItem, zuoZtItem } from "@iii8iii/dfcfbot/dist/types";
 import { getStockCode, ready, reRun } from "./utils";
 import { clearInterval, setInterval } from 'timers';
 import { getKlineData } from "@iii8iii/dfcfbot";
-import { difference, union, unionBy } from 'lodash';
+import { difference, union } from 'lodash';
 import { stockData } from '../types';
 
 (async () => {
-  const ports = await ready(['MR2GD', 'MR2UD']);
+  const ports = await ready(['LY2GD', 'LY2UD']);
   let result: string[] = [];
   let codes: string[] = [];
 
-  ports["MR2GD"]?.on('message', async (data: stockData) => {
-    let { qs, zj, wfzf } = data;
-    qs = qs.filter((v: qsItem) => v.ltsz > 10 * 100000000 && v.p > 800);
-    const stocks: stockItem[] = unionBy(qs, zj, wfzf, 'c');
+  ports["LY2GD"]?.on('message', async (data: stockData) => {
+    let { zzt } = data;
+    const stocks: stockItem[] = zzt.filter((v: zuoZtItem) => v.yfbt < 100000 && v.zs > 0);
     codes = union(codes, getStockCode(stocks));
   });
 
   reRun(async () => {
     let t = setInterval(async () => {
       if (result.length) {
-        ports["MR2UD"]?.postMessage(result);
+        ports["LY2UD"]?.postMessage(result);
       }
     }, 1000);
     for (const code of codes) {
-      const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
-      if (dData && wData && macdTrend(wData, 'UP', 1) && bollTrend(wData, 'UP', 1) && kdjTrend(wData) && macdTrend(dData, 'UP', 2) && bollTrend(dData, 'UP', 2) && kdjTrend(dData)) {
+      if (wData && macdTrend(wData, 'UP', 1) && bollTrend(wData, 'UP', 1) && kdjTrend(wData)) {
         result = union(result, [code]);
       } else {
         result = difference(result, [code]);
