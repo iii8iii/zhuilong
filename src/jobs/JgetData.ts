@@ -1,7 +1,7 @@
 import { get5minZfStocks, getMoneyInStocks, getQsStocksInfo, getTpStocks, getZtStocksInfo, getZuoZtStocksInfo } from "@iii8iii/dfcfbot";
 import { ready, clearStocks, reRun } from "./utils";
 import { stockData } from "../types";
-import { union } from 'lodash';
+import { unionBy } from 'lodash';
 
 (async () => {
   const tp = await getTpStocks();
@@ -24,7 +24,7 @@ import { union } from 'lodash';
       const zj3 = await getMoneyInStocks(3);
       const zj5 = await getMoneyInStocks(5);
       const zj10 = await getMoneyInStocks(10);
-      result.zj = clearStocks(zt, tp, union(zj1, zj3, zj5, zj10));
+      result.zj = clearStocks(zt, tp, unionBy(zj1, zj3, zj5, zj10, 'c'));
 
       const wfzf = await get5minZfStocks();
       result.wfzf = wfzf.length ? clearStocks(zt, tp, wfzf) : result.wfzf;
