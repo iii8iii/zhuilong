@@ -8,14 +8,15 @@ import { difference, union } from 'lodash';
 import { stockData } from '../types';
 
 (async () => {
-  let toPorts: MessagePort[] = [];
-  let fromPorts: MessagePort[] = [];
+  let ports: MessagePort[] = [];
+  let result: string[] = [];
+  let codes: string[] = [];
 
   if (parentPort) {
     parentPort.on('message', (msg) => {
       const { to, from } = msg;
       if (to) {
-        toPorts.push(to);
+        ports.push(to);
       }
       if (from) {
         from.on('message', async (data: stockData) => {
@@ -23,20 +24,14 @@ import { stockData } from '../types';
           const stocks: stockItem[] = zzt.filter((v: zuoZtItem) => v.yfbt < 100000 && v.zs > 0);
           codes = union(codes, getStockCode(stocks));
         });
-
-        fromPorts.push(from);
       }
     });
   }
 
-  let result: string[] = [];
-  let codes: string[] = [];
-
-
   reRun(async () => {
     let t = setInterval(async () => {
       if (result.length) {
-        for (const port of toPorts) {
+        for (const port of ports) {
           port.postMessage(result);
         }
       }

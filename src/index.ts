@@ -96,15 +96,15 @@ export class Zhuilong {
 (async () => {
   const zl = new Zhuilong([
     //get data
-    { name: 'GD', path: 'src/jobs/JgetData.ts', start: 'after 9:25 ', end: { h: 18, m: 0 }, to: ['NM', 'LY', 'ZJ'] },
+    { name: 'GD', path: 'src/jobs/JgetData.ts', start: 'after 9:25', end: { h: 19, m: 45 } },
     //longyi 9:25-10:00am.
-    { name: 'LY', path: 'src/jobs/Jlongyi.ts', start: 'after 9:25 ', end: { h: 18, m: 0 }, from: ['GD'], to: ['UD'] },
+    { name: 'LY', path: 'src/jobs/Jlongyi.ts', start: 'after 9:25', end: { h: 19, m: 45 }, link: ['GD'] },
     //nomal
-    { name: 'NM', path: 'src/jobs/Jnomal.ts', start: 'after 9:55 ', end: { h: 18, m: 0 }, from: ['GD'], to: ['UD'] },
+    { name: 'NM', path: 'src/jobs/Jnomal.ts', start: 'after 9:40', end: { h: 19, m: 40 }, link: ['GD'] },
     //zijing
-    { name: 'ZJ', path: 'src/jobs/Jzijing.ts', start: 'after 14:40 ', end: { h: 18, m: 0 }, from: ['GD'], to: ['UD'] },
+    { name: 'ZJ', path: 'src/jobs/Jzijing.ts', start: 'after 14:40', end: { h: 19, m: 45 }, link: ['GD'] },
     //update
-    { name: 'UD', path: 'src/jobs/update.ts', start: 'after 9:20 ', end: { h: 18, m: 0 }, from: ['NM', 'LY', 'ZJ'] },
+    { name: 'UD', path: 'src/jobs/update.ts', start: 'after 9:20', end: { h: 19, m: 45 }, link: ['NM', 'LY', 'ZJ'] },
   ]);
   await zl.new(process.env['USER'] as string, process.env['USERPSW'] as string);
   zl.startAll();

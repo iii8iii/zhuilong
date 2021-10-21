@@ -18,34 +18,17 @@ export class Instance {
       const j = this.jobs.find(v => v.name === name) as Job;
 
       //try to connet workers with messageChannel
-      const { to, from } = j;
-      if (to && to.length) {
-        for (const t of to) {
-          const wt = ws[t as keyof object] as Worker | undefined;
-          if (wt) {
-            const { port1, port2 } = new MessageChannel();
+      const { link } = j;
 
-            let o: Port = {};
-            o[`from`] = port1;
-            wt.postMessage(o, [port1]);
-
-            let n: Port = {};
-            n[`to`] = port2;
-            const wn = ws[name as keyof object] as Worker;
-            wn.postMessage(n, [port2]);
-          }
-        }
-      }
-
-      if (from && from.length) {
-        for (const f of from) {
-          const wf = ws[f as keyof object] as Worker | undefined;
-          if (wf) {
+      if (link && link.length) {
+        for (const l of link) {
+          const wl = ws[l as keyof object] as Worker | undefined;
+          if (wl) {
             const { port1, port2 } = new MessageChannel();
 
             let o: Port = {};
             o[`to`] = port1;
-            wf.postMessage(o, [port1]);
+            wl.postMessage(o, [port1]);
 
             let n: Port = {};
             n[`from`] = port2;
