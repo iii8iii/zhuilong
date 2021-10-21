@@ -1,8 +1,6 @@
 import { ztItem, stockItem } from '@iii8iii/dfcfbot/dist/types';
-import { difference, differenceBy } from "lodash";
-import { parentPort } from "worker_threads";
-import { Port } from "../types";
-
+import { getZtStocksInfo } from '@iii8iii/dfcfbot';
+import { differenceBy, difference } from "lodash";
 
 /**
  * 获取股票代码，传入还C属性的股票信息
@@ -15,28 +13,11 @@ export function getStockCode(data: stockItem[]) {
   return stockCodes;
 };
 
-
-/**
- * 传入一个接口数组，等待这些接口打通之后才进行接下来的步骤
- * 接口名的规则是jobnameA2jobnameB
- * @param {string[]} ports
- * @return {*} 
- */
-export async function ready(ports: string[]) {
-  let messagePorts: Port = {};
-  const p: Promise<void> = new Promise(resolve => {
-    if (parentPort) {
-      parentPort.on('message', msg => {
-        ports = difference(ports, Object.keys(msg));
-        messagePorts = Object.assign(messagePorts, msg);
-        if (ports.length == 0) resolve();
-      });
-    }
-  });
-  await p;
-  return messagePorts;
-};
-
+export async function delZt(codes: string[]) {
+  const zt: ztItem[] = await getZtStocksInfo();
+  const ztCodes = getStockCode(zt);
+  return difference(codes, ztCodes);
+}
 /**
  * 在股票信息级别直接去除已经涨停的股票信息
  * 这样做是为了减少不必要的运算，

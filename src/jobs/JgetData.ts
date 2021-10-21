@@ -1,13 +1,22 @@
 import { get5minZfStocks, getMoneyInStocks, getQsStocksInfo, getTpStocks, getZtStocksInfo, getZuoZtStocksInfo } from "@iii8iii/dfcfbot";
-import { ready, clearStocks, reRun } from "./utils";
+import { MessagePort, parentPort } from "worker_threads";
+import { clearStocks, reRun } from "./utils";
 import { stockData } from "../types";
 import { unionBy } from 'lodash';
 
 (async () => {
   const tp = await getTpStocks();
-  //you need to add you port to the array as argment of ready
-  //you can make sure the ports are ready to finish the fllowing jobs by doing this
-  const ports = await ready(['GD2MR']);
+
+  let toPorts: MessagePort[] = [];
+  if (parentPort) {
+    parentPort.on('message', (msg) => {
+      const { to } = msg;
+      if (to) {
+        toPorts.push(to);
+      }
+    });
+  }
+
   let result: stockData = { zt: [], zzt: [], qs: [], zj: [], wfzf: [] };
   reRun(async () => {
     try {
@@ -29,7 +38,9 @@ import { unionBy } from 'lodash';
       const wfzf = await get5minZfStocks();
       result.wfzf = wfzf.length ? clearStocks(zt, tp, wfzf) : result.wfzf;
 
-      ports["GD2MR"]?.postMessage(result);
+      for (const port of toPorts) {
+        port.postMessage(result);
+      }
     } catch (error) {
       console.log('error:', error);
     }

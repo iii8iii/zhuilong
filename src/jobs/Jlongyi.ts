@@ -1,28 +1,47 @@
 import { bollTrend, kdjTrend, macdTrend } from "@iii8iii/analysts";
 import { stockItem, zuoZtItem } from "@iii8iii/dfcfbot/dist/types";
-import { getStockCode, ready, reRun } from "./utils";
+import { MessagePort, parentPort } from "worker_threads";
+import { getStockCode, reRun } from "./utils";
 import { clearInterval, setInterval } from 'timers';
 import { getKlineData } from "@iii8iii/dfcfbot";
 import { difference, union } from 'lodash';
 import { stockData } from '../types';
 
 (async () => {
-  const ports = await ready(['LY2GD', 'LY2UD']);
+  let toPorts: MessagePort[] = [];
+  let fromPorts: MessagePort[] = [];
+
+  if (parentPort) {
+    parentPort.on('message', (msg) => {
+      const { to, from } = msg;
+      if (to) {
+        toPorts.push(to);
+      }
+      if (from) {
+        from.on('message', async (data: stockData) => {
+          let { zzt } = data;
+          const stocks: stockItem[] = zzt.filter((v: zuoZtItem) => v.yfbt < 100000 && v.zs > 0);
+          codes = union(codes, getStockCode(stocks));
+        });
+
+        fromPorts.push(from);
+      }
+    });
+  }
+
   let result: string[] = [];
   let codes: string[] = [];
 
-  ports["LY2GD"]?.on('message', async (data: stockData) => {
-    let { zzt } = data;
-    const stocks: stockItem[] = zzt.filter((v: zuoZtItem) => v.yfbt < 100000 && v.zs > 0);
-    codes = union(codes, getStockCode(stocks));
-  });
 
   reRun(async () => {
     let t = setInterval(async () => {
       if (result.length) {
-        ports["LY2UD"]?.postMessage(result);
+        for (const port of toPorts) {
+          port.postMessage(result);
+        }
       }
     }, 1000);
+
     for (const code of codes) {
       const wData = await getKlineData(code, 'W');
       if (wData && macdTrend(wData, 'UP', 2) && bollTrend(wData, 'UP', 2) && kdjTrend(wData)) {
