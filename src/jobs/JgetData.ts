@@ -1,6 +1,6 @@
 import { get5minZfStocks, getMoneyInStocks, getQsStocksInfo, getTpStocks, getZtStocksInfo, getZuoZtStocksInfo } from "@iii8iii/dfcfbot";
 import { MessagePort, parentPort } from "worker_threads";
-import { clearStocks, reRun } from "./utils";
+import { delTp, reRun } from "./utils";
 import { stockData } from "../types";
 import { unionBy } from 'lodash';
 
@@ -24,19 +24,19 @@ import { unionBy } from 'lodash';
       result.zt = zt.length ? zt : result.zt;
 
       const zzt = await getZuoZtStocksInfo();
-      result.zzt = zzt.length ? clearStocks(zt, tp, zzt) : result.zzt;
+      result.zzt = zzt.length ? delTp(tp, zzt) : result.zzt;
 
       const qs = await getQsStocksInfo();
-      result.qs = qs.length ? clearStocks(zt, tp, qs) : result.qs;
+      result.qs = qs.length ? delTp(tp, qs) : result.qs;
 
       const zj1 = await getMoneyInStocks(1);
       const zj3 = await getMoneyInStocks(3);
       const zj5 = await getMoneyInStocks(5);
       const zj10 = await getMoneyInStocks(10);
-      result.zj = clearStocks(zt, tp, unionBy(zj1, zj3, zj5, zj10, 'c'));
+      result.zj = delTp(tp, unionBy(zj1, zj3, zj5, zj10, 'c'));
 
       const wfzf = await get5minZfStocks();
-      result.wfzf = wfzf.length ? clearStocks(zt, tp, wfzf) : result.wfzf;
+      result.wfzf = wfzf.length ? delTp(tp, wfzf) : result.wfzf;
 
       for (const port of toPorts) {
         port.postMessage(result);

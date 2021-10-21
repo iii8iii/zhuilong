@@ -13,22 +13,25 @@ export function getStockCode(data: stockItem[]) {
   return stockCodes;
 };
 
+/**
+ * 删除涨停股
+ * @param {string[]} codes
+ * @return {*} 
+ */
 export async function delZt(codes: string[]) {
   const zt: ztItem[] = await getZtStocksInfo();
   const ztCodes = getStockCode(zt);
   return difference(codes, ztCodes);
 }
 /**
- * 在股票信息级别直接去除已经涨停的股票信息
- * 这样做是为了减少不必要的运算，
- * 因为股票涨停时是没有办法买的
+ * 删除停牌股
  * @template T
- * @param {ztItem[]} zt
+ * @param {ztItem[]} zt 将停牌股作为参数传入，因为这个数据同一天内是固定的，一次请求多次使用，避免过多请求
  * @param {T[]} items
  * @return {*} 
  */
-export function clearStocks<T>(zt: ztItem[], tp: stockItem[], items: T[]) {
-  return differenceBy(items, zt, tp, 'c');
+export function delTp<T>(tp: stockItem[], items: T[]) {
+  return differenceBy(items, tp, 'c');
 };
 
 

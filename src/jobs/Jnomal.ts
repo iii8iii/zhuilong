@@ -5,11 +5,11 @@ import { getStockCode, reRun } from "./utils";
 import { clearInterval, setInterval } from 'timers';
 import { getKlineData } from "@iii8iii/dfcfbot";
 import { difference, union, unionBy } from 'lodash';
-import { stockData } from '../types';
+import { Result, stockData } from '../types';
 
 (async () => {
   let ports: MessagePort[] = [];
-  let result: string[] = [];
+  let result: Result = { codes: [] };
   let codes: string[] = [];
 
   if (parentPort) {
@@ -31,7 +31,7 @@ import { stockData } from '../types';
 
   reRun(async () => {
     let t = setInterval(async () => {
-      if (result.length) {
+      if (result.codes.length) {
         for (const port of ports) {
           port.postMessage(result);
         }
@@ -42,9 +42,9 @@ import { stockData } from '../types';
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
       if (dData && wData && macdTrend(wData, 'UP', 2) && bollTrend(wData, 'UP', 2) && kdjTrend(wData) && macdTrend(dData, 'UP', 2) && bollTrend(dData, 'UP', 2) && kdjTrend(dData)) {
-        result = union(result, [code]);
+        result.codes = union(result.codes, [code]);
       } else {
-        result = difference(result, [code]);
+        result.codes = difference(result.codes, [code]);
       }
       codes.shift();
     }

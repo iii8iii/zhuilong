@@ -7,3 +7,8 @@ export interface Time { h: number, m: number, s?: number, ms?: number; }
 export interface stockData { zt: ztItem[], zzt: zuoZtItem[], qs: qsItem[], zj: stockItem[], wfzf: stockItem[]; }
 
 export interface Port { [x: string]: MessagePort; }
+
+export interface Result {
+  codes: string[];
+  zt?: boolean,
+}
