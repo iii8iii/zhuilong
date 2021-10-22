@@ -1,4 +1,4 @@
-import { bollTrend, kdjTrend, macdTrend } from "@iii8iii/analysts";
+import { macdTrend } from "@iii8iii/analysts";
 import { stockItem, zuoZtItem } from "@iii8iii/dfcfbot/dist/types";
 import { MessagePort, parentPort } from "worker_threads";
 import { getStockCode, reRun } from "./utils";
@@ -21,7 +21,7 @@ import { Result, stockData } from '../types';
       if (from) {
         from.on('message', async (data: stockData) => {
           let { zzt } = data;
-          const stocks: stockItem[] = zzt.filter((v: zuoZtItem) => v.yfbt < 100000 && v.zs > 0);
+          const stocks: stockItem[] = zzt.filter((v: zuoZtItem) => v.yfbt < 100000 && v.zdp < 5);
           codes = union(codes, getStockCode(stocks));
         });
       }
@@ -35,11 +35,11 @@ import { Result, stockData } from '../types';
           port.postMessage(result);
         }
       }
-    }, 15 * 1000);
+    }, 5 * 1000);
 
     for (const code of codes) {
-      const wData = await getKlineData(code, 'W');
-      if (wData && macdTrend(wData, 'UP', 2) && bollTrend(wData, 'UP', 2) && kdjTrend(wData)) {
+      const dData = await getKlineData(code, 'D');
+      if (dData && macdTrend(dData, 'UP', 2)) {
         result.codes = union(result.codes, [code]);
       } else {
         result.codes = difference(result.codes, [code]);

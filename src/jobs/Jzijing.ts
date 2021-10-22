@@ -1,4 +1,4 @@
-import { bollTrend, kdjTrend, macdTrend } from "@iii8iii/analysts";
+import { macdTrend } from "@iii8iii/analysts";
 import { parentPort, MessagePort } from "worker_threads";
 import { getStockCode, reRun } from "./utils";
 import { clearInterval, setInterval } from 'timers';
@@ -33,11 +33,11 @@ import { Result, stockData } from '../types';
           port.postMessage(result);
         }
       }
-    }, 15 * 1000);
+    }, 5 * 1000);
 
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
-      if (dData && macdTrend(dData, 'UP', 2) && bollTrend(dData, 'UP', 2) && kdjTrend(dData)) {
+      if (dData && macdTrend(dData, 'UP', 2)) {
         result.codes = union(result.codes, [code]);
       } else {
         result.codes = difference(result.codes, [code]);
