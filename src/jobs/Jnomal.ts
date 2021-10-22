@@ -1,4 +1,4 @@
-import { maTrendUp } from "@iii8iii/analysts";
+import { bollTrend, kdjTrend, macdTrend, maTrendUp } from "@iii8iii/analysts";
 import { stockItem } from "@iii8iii/dfcfbot/dist/types";
 import { parentPort, MessagePort } from "worker_threads";
 import { getStockCode, reRun } from "./utils";
@@ -39,8 +39,7 @@ import { Result, stockData } from '../types';
 
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
-      // const wData = await getKlineData(code, 'W');
-      if (dData && maTrendUp(dData)) {
+      if (dData && maTrendUp(dData) && macdTrend(dData, 'UP', 2) && bollTrend(dData, 'UP', 3) && kdjTrend(dData)) {
         result.codes = union(result.codes, [code]);
       } else {
         result.codes = difference(result.codes, [code]);
