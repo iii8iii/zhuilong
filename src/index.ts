@@ -97,7 +97,7 @@ export class Zhuilong {
   const zl = new Zhuilong([
     //get data
     { name: 'GD', path: 'src/jobs/JgetData.ts', start: 'after 9:25' },
-    //longyi 9:25-10:00am.
+    //longyi 
     { name: 'LY', path: 'src/jobs/Jlongyi.ts', start: 'after 9:25', end: { h: 9, m: 45 }, link: ['GD'] },
     //nomal
     { name: 'NM', path: 'src/jobs/Jnomal.ts', start: 'after 9:40', end: { h: 14, m: 40 }, link: ['GD'] },

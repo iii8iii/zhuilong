@@ -17,9 +17,7 @@ import { Result } from "../types";
 				if (parentPort) {
 					parentPort.postMessage(zx);
 				}
-				if (zx.length > 15) {
-					zx.pop();
-				}
+				zx.pop();
 			});
 		});
 	}
