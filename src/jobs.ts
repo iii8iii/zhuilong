@@ -13,10 +13,10 @@ export function shedule(jobs: Job[], handler: (message: any, c: string) => void)
 	jobs.forEach(job => {
 		let w = {
 			name: job.name,
-			timeout: job.start,
+			timmeout: 0,
 			worker: { workerData: { __filename: job.path } },
 			path: typescript_worker,
-			interval: 'every weekday'
+			interval: `after ${job.start} every weekday`
 		};
 		buildJobs.push(w);
 	});

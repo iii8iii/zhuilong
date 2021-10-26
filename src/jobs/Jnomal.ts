@@ -35,7 +35,7 @@ import { Result, stockData } from '../types';
           port.postMessage(result);
         }
       }
-    }, 15 * 1000);
+    }, 5 * 1000);
 
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
