@@ -16,7 +16,7 @@ export function shedule(jobs: Job[], handler: (message: any, c: string) => void)
 			timmeout: 0,
 			worker: { workerData: { __filename: job.path } },
 			path: typescript_worker,
-			interval: `after ${job.start} every weekday`
+			interval: `at ${job.start} every weekday`
 		};
 		buildJobs.push(w);
 	});
