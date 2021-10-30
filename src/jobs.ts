@@ -16,6 +16,7 @@ export function shedule(jobs: Job[], handler: (message: any, c: string) => void)
 			timmeout: 0,
 			worker: { workerData: { __filename: job.path } },
 			path: typescript_worker,
+			//神马情况
 			interval: `at ${job.start} every weekday`
 		};
 		buildJobs.push(w);
