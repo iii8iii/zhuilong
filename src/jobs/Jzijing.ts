@@ -28,10 +28,8 @@ import { Result, stockData } from '../types';
 
   reRun(async () => {
     let t = setInterval(async () => {
-      if (result.codes.length) {
-        for (const port of ports) {
-          port.postMessage(result);
-        }
+      for (const port of ports) {
+        port.postMessage(result);
       }
     }, 5 * 1000);
 

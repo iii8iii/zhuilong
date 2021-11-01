@@ -9,7 +9,6 @@ import { Result } from "../types";
 		parentPort.on('message', msg => {
 			const { from } = msg;
 			from.on('message', async (result: Result) => {
-				console.log('get message in update: ', result);
 				let { zt, codes } = result;
 				if (!zt) {
 					codes = await delZt(codes);
