@@ -1,10 +1,9 @@
 import { maTrendUp } from "@iii8iii/analysts";
-import { stockItem } from "@iii8iii/dfcfbot/dist/types";
 import { parentPort, MessagePort } from "worker_threads";
 import { getStockCode, reRun } from "./utils";
 import { clearInterval, setInterval } from 'timers';
 import { getKlineData } from "@iii8iii/dfcfbot";
-import { difference, union, unionBy } from 'lodash';
+import { difference, union } from 'lodash';
 import { Result, stockData } from '../types';
 
 (async () => {
@@ -20,9 +19,9 @@ import { Result, stockData } from '../types';
       }
       if (from) {
         from.on('message', async (data: stockData) => {
-          let { qs, zj } = data;
-          const stocks: stockItem[] = unionBy(qs, zj, 'c');
-          codes = union(codes, getStockCode(stocks));
+          let { qs } = data;
+          qs = qs.filter(v => v.nh);
+          codes = union(codes, getStockCode(qs));
         });
       }
     });
@@ -37,8 +36,7 @@ import { Result, stockData } from '../types';
 
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
-      const sData = await getKlineData(code, '60m');
-      if (dData && sData && maTrendUp(dData)) {
+      if (dData && maTrendUp(dData)) {
         result.codes = union(result.codes, [code]);
       } else {
         result.codes = difference(result.codes, [code]);
