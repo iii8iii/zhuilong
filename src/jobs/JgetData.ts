@@ -44,5 +44,5 @@ import { unionBy } from 'lodash';
     } catch (error) {
       console.log('error:', error);
     }
-  }, 1000);
+  }, 30 * 1000);
 })();

@@ -1,10 +1,9 @@
-import { maTrendUp } from "@iii8iii/analysts";
 import { parentPort, MessagePort } from "worker_threads";
 import { getStockCode, reRun } from "./utils";
-import { clearInterval, setInterval } from 'timers';
 import { getKlineData } from "@iii8iii/dfcfbot";
-import { difference, union } from 'lodash';
+import { take, union } from 'lodash';
 import { Result, stockData } from '../types';
+import { bollTrend, kdjTrend, macdTrend } from '@iii8iii/analysts';
 
 (async () => {
   let ports: MessagePort[] = [];
@@ -21,29 +20,23 @@ import { Result, stockData } from '../types';
         from.on('message', async (data: stockData) => {
           let { qs } = data;
           qs = qs.filter(v => v.nh);
-          codes = union(codes, getStockCode(qs));
+          codes = union(getStockCode(qs), codes);
         });
       }
     });
   }
 
   reRun(async () => {
-    let t = setInterval(async () => {
-      for (const port of ports) {
-        port.postMessage(result);
-      }
-    }, 5 * 1000);
-
+    codes = take(codes, 100);
     for (const code of codes) {
-      const dData = await getKlineData(code, 'D');
-      if (dData && maTrendUp(dData)) {
-        result.codes = union(result.codes, [code]);
-      } else {
-        result.codes = difference(result.codes, [code]);
+      const wData = await getKlineData(code, 'W');
+      if (wData && macdTrend(wData, 'UP', 2) && kdjTrend(wData) && bollTrend(wData)) {
+        result.codes.push(code);
       }
-      codes.shift();
     }
-
-    clearInterval(t);
+    for (const port of ports) {
+      port.postMessage(result);
+    }
+    result.codes = [];
   });
 })();

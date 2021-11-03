@@ -14,9 +14,6 @@ export class Instance {
     this.jobs = jobs;
     this.shedule = shedule(jobs, this.ths.update.bind(this.ths));
     this.shedule.on('worker created', (name) => {
-      const day = new Date();
-      console.log(`worker ${name} created at:`, day.getDate(), day.getHours(), day.getMinutes());
-
       const ws = this.shedule.workers;
       const j = this.jobs.find(v => v.name === name) as Job;
 

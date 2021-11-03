@@ -96,13 +96,9 @@ export class Zhuilong {
 (async () => {
   const zl = new Zhuilong([
     //get data
-    { name: 'GD', path: 'src/jobs/JgetData.ts', start: '9:25' },
-    //longyi 
-    // { name: 'LY', path: 'src/jobs/Jlongyi.ts', start: '9:25', end: { h: 9, m: 45 }, link: ['GD'] },
+    { name: 'GD', path: 'src/jobs/JgetData.ts', start: '9:20' },
     //nomal
-    { name: 'NM', path: 'src/jobs/Jnomal.ts', start: '9:25', link: ['GD'] },
-    //zijing
-    // { name: 'ZJ', path: 'src/jobs/Jzijing.ts', start: '14:40', link: ['GD'] },
+    { name: 'NM', path: 'src/jobs/Jnomal.ts', start: '9:20', link: ['GD'] },
     //update
     { name: 'UD', path: 'src/jobs/update.ts', start: '9:20', link: ['NM', 'LY', 'ZJ'] },
   ]);
