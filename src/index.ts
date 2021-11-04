@@ -100,7 +100,7 @@ export class Zhuilong {
     //nomal
     { name: 'NM', path: 'src/jobs/Jnomal.ts', start: '9:20', link: ['GD'] },
     //update
-    { name: 'UD', path: 'src/jobs/update.ts', start: '9:20', link: ['NM', 'LY', 'ZJ'] },
+    { name: 'UD', path: 'src/jobs/update.ts', start: '9:20', link: ['NM'] },
   ]);
   await zl.new(process.env['USER'] as string, process.env['USERPSW'] as string);
   zl.startAll();

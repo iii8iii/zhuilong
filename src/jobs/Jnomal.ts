@@ -3,7 +3,7 @@ import { getStockCode, reRun } from "./utils";
 import { getKlineData } from "@iii8iii/dfcfbot";
 import { take, union } from 'lodash';
 import { Result, stockData } from '../types';
-import { bollTrend, kdjTrend, macdTrend } from '@iii8iii/analysts';
+import { kdjTrend, macdTrend } from '@iii8iii/analysts';
 
 (async () => {
   let ports: MessagePort[] = [];
@@ -30,7 +30,7 @@ import { bollTrend, kdjTrend, macdTrend } from '@iii8iii/analysts';
     codes = take(codes, 100);
     for (const code of codes) {
       const wData = await getKlineData(code, 'W');
-      if (wData && macdTrend(wData, 'UP', 2) && kdjTrend(wData) && bollTrend(wData)) {
+      if (wData && macdTrend(wData) && kdjTrend(wData)) {
         result.codes.push(code);
       }
     }
