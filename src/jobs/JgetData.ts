@@ -2,7 +2,6 @@ import { get5minZfStocks, getMoneyInStocks, getQsStocksInfo, getTpStocks, getZtS
 import { MessagePort, parentPort } from "worker_threads";
 import { delTp, reRun } from "./utils";
 import { stockData } from "../types";
-import { unionBy } from 'lodash';
 
 (async () => {
   const tp = await getTpStocks();
@@ -28,12 +27,8 @@ import { unionBy } from 'lodash';
 
       const qs = await getQsStocksInfo();
       result.qs = qs.length ? delTp(tp, qs) : result.qs;
-
-      const zj1 = await getMoneyInStocks(1);
-      const zj3 = await getMoneyInStocks(3);
-      const zj5 = await getMoneyInStocks(5);
-      const zj10 = await getMoneyInStocks(10);
-      result.zj = delTp(tp, unionBy(zj1, zj3, zj5, zj10, 'c'));
+      const zj = await getMoneyInStocks(3);
+      result.zj = zj.length ? delTp(tp, zj) : result.zj;
 
       const wfzf = await get5minZfStocks();
       result.wfzf = wfzf.length ? delTp(tp, wfzf) : result.wfzf;

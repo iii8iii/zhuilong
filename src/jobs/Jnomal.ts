@@ -1,13 +1,11 @@
 import { parentPort, MessagePort } from "worker_threads";
 import { getStockCode, reRun } from "./utils";
-import { getKlineData } from "@iii8iii/dfcfbot";
 import { take, union } from 'lodash';
 import { Result, stockData } from '../types';
-import { kdjTrend, macdTrend } from '@iii8iii/analysts';
 
 (async () => {
   let ports: MessagePort[] = [];
-  let result: Result = { codes: [] };
+  let result: Result = { codes: [], zt: true };
   let codes: string[] = [];
 
   if (parentPort) {
@@ -18,22 +16,15 @@ import { kdjTrend, macdTrend } from '@iii8iii/analysts';
       }
       if (from) {
         from.on('message', async (data: stockData) => {
-          let { qs } = data;
-          qs = qs.filter(v => v.nh);
-          codes = union(getStockCode(qs), codes);
+          let { zj } = data;
+          codes = union(getStockCode(zj), codes);
         });
       }
     });
   }
 
   reRun(async () => {
-    codes = take(codes, 100);
-    for (const code of codes) {
-      const wData = await getKlineData(code, 'W');
-      if (wData && macdTrend(wData) && kdjTrend(wData)) {
-        result.codes.push(code);
-      }
-    }
+    result.codes = take(codes, 25);
     for (const port of ports) {
       port.postMessage(result);
     }
