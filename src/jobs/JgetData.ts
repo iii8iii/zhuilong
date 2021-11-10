@@ -1,4 +1,4 @@
-import { get5minZfStocks, getMoneyInStocks, getQsStocksInfo, getTpStocks, getZtStocksInfo, getZuoZtStocksInfo } from "@iii8iii/dfcfbot";
+import { get5minZfStocks, getMoneyInStocks, getQsStocksInfo, getTpStocks, getZlStocks, getZtStocksInfo, getZuoZtStocksInfo } from "@iii8iii/dfcfbot";
 import { MessagePort, parentPort } from "worker_threads";
 import { delTp, reRun } from "./utils";
 import { stockData } from "../types";
@@ -16,7 +16,7 @@ import { stockData } from "../types";
     });
   }
 
-  let result: stockData = { zt: [], zzt: [], qs: [], zj1: [], zj3: [], zj5: [], zj10: [], wfzf: [] };
+  let result: stockData = { zt: [], zzt: [], qs: [], zj1: [], zj3: [], zj5: [], zj10: [], wfzf: [], zl: [] };
   reRun(async () => {
     try {
       const zt = await getZtStocksInfo();
@@ -42,6 +42,9 @@ import { stockData } from "../types";
 
       const wfzf = await get5minZfStocks();
       result.wfzf = wfzf.length ? delTp(tp, wfzf) : result.wfzf;
+
+      const zl = await getZlStocks();
+      result.zl = zl.length ? delTp(tp, zl) : result.zl;
 
       for (const port of toPorts) {
         port.postMessage(result);
