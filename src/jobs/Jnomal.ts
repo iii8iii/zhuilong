@@ -5,7 +5,7 @@ import { Result, stockData } from '../types';
 
 (async () => {
   let ports: MessagePort[] = [];
-  let result: Result = { codes: [] };
+  let result: Result = { codes: [], zt: true };
   let codes: string[] = [];
 
   if (parentPort) {
@@ -24,7 +24,7 @@ import { Result, stockData } from '../types';
   }
 
   reRun(async () => {
-    result.codes = take(codes, 30);
+    result.codes = take(codes, 50);
     for (const port of ports) {
       port.postMessage(result);
     }
