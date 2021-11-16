@@ -1,12 +1,10 @@
 import { parentPort, MessagePort } from "worker_threads";
 import { getStockCode, reRun } from "./utils";
-import { take, union } from 'lodash';
 import { Result, stockData } from '../types';
 
 (async () => {
   let ports: MessagePort[] = [];
   let result: Result = { codes: [] };
-  let codes: string[] = [];
 
   if (parentPort) {
     parentPort.on('message', (msg) => {
@@ -17,17 +15,15 @@ import { Result, stockData } from '../types';
       if (from) {
         from.on('message', async (data: stockData) => {
           let { zl } = data;
-          codes = union(getStockCode(zl), codes);
+          result.codes = getStockCode(zl);
         });
       }
     });
   }
 
   reRun(async () => {
-    result.codes = take(codes, 50);
     for (const port of ports) {
       port.postMessage(result);
     }
-    result.codes = [];
   });
 })();
