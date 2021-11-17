@@ -14,9 +14,9 @@ import { Result, stockData } from '../types';
       }
       if (from) {
         from.on('message', async (data: stockData) => {
-          let { zl } = data;
-          zl = zl.filter(zl => zl.zdp > 3);
-          result.codes = getStockCode(zl);
+          let { qs } = data;
+          qs = qs.filter(item => item.zdp > 3 && item.nh);
+          result.codes = getStockCode(qs);
         });
       }
     });
