@@ -98,9 +98,9 @@ export class Zhuilong {
     //get data
     { name: 'GD', path: 'src/jobs/JgetData.ts', start: '9:20' },
     //nomal
-    { name: 'NM', path: 'src/jobs/Jnomal.ts', start: '9:20', end: { h: 10, m: 0 }, link: ['GD'] },
+    { name: 'NM', path: 'src/jobs/Jnomal.ts', start: '9:20', end: { h: 9, m: 45 }, link: ['GD'] },
     //after close
-    { name: 'AN', path: 'src/jobs/Jafternoon.ts', start: '10:00', link: ['GD'] },
+    { name: 'AN', path: 'src/jobs/Jafternoon.ts', start: '9:45', link: ['GD'] },
     //update
     { name: 'UD', path: 'src/jobs/update.ts', start: '9:20', link: ['NM', 'AN'] },
   ]);

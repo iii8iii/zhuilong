@@ -36,7 +36,6 @@ import { macdTrend } from '@iii8iii/analysts';
     }
 
     result.codes = take(result.codes, 50);
-
     for (const port of ports) {
       port.postMessage(result);
     }
