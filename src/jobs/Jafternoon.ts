@@ -28,7 +28,8 @@ import { macdTrend } from '@iii8iii/analysts';
   reRun(async () => {
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
-      if (dData && macdTrend(dData)) {
+      const wData = await getKlineData(code, 'W');
+      if (dData && wData && macdTrend(wData) && macdTrend(dData)) {
         result.codes = union([code], result.codes);
       } else {
         result.codes = difference(result.codes, [code]);
