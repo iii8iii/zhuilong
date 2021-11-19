@@ -13,11 +13,14 @@ import { Result } from "../types";
 				if (!zt) {
 					codes = await delZt(codes);
 				}
+
+				console.log('length of codes from msg:', codes.length);
 				zx = union(codes, zx);
+				console.log('after union,zx length:', zx.length);
+
 				if (parentPort) {
 					parentPort.postMessage(zx);
 				}
-				console.log('del last,zx length:', zx.length);
 				zx.pop();
 				console.log('after del,zx length:', zx.length);
 			});
