@@ -1,22 +1,19 @@
 import { parentPort, MessagePort } from "worker_threads";
-import { getStockCode, reRun } from "./utils";
 import { Result, stockData } from '../types';
-
+import { getStockCode, reRun } from './utils';
 (async () => {
   let ports: MessagePort[] = [];
   let result: Result = { codes: [] };
-
   if (parentPort) {
-    parentPort.on('message', (msg) => {
-      const { to, from } = msg;
+    parentPort.on('message', msg => {
+      const { from, to } = msg;
       if (to) {
         ports.push(to);
       }
       if (from) {
-        from.on('message', async (data: stockData) => {
-          let { zl } = data;
-          zl = zl.filter(zl => zl.zdp > 3);
-          result.codes = getStockCode(zl);
+        from.on('message', (data: stockData) => {
+          const { zj1 } = data;
+          result.codes = getStockCode(zj1);
         });
       }
     });

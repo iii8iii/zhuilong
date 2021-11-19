@@ -95,14 +95,11 @@ export class Zhuilong {
 //make a test
 (async () => {
   const zl = new Zhuilong([
-    //get data
-    { name: 'GD', path: 'src/jobs/JgetData.ts', start: '9:20' },
-    //nomal
-    { name: 'NM', path: 'src/jobs/Jnomal.ts', start: '9:20', end: { h: 9, m: 45 }, link: ['GD'] },
-    //after close
-    { name: 'AN', path: 'src/jobs/Jafternoon.ts', start: '9:45', link: ['GD'] },
-    //update
-    { name: 'UD', path: 'src/jobs/update.ts', start: '9:20', link: ['NM', 'AN'] },
+    { name: 'DB', path: 'src/jobs/Jdb.ts', start: '9:20' },
+    { name: 'LY', path: 'src/jobs/Jly.ts', start: '9:20', link: ['DB'] },
+    { name: 'ZL', path: 'src/jobs/Jzl.ts', start: '9:35', link: ['DB'] },
+    { name: 'ZJ', path: 'src/jobs/Jzj.ts', start: '9:35', link: ['DB'] },
+    { name: 'UD', path: 'src/jobs/update.ts', start: '9:20', link: ['ZL', 'LY', 'ZJ'] },
   ]);
   await zl.new(process.env['USER'] as string, process.env['USERPSW'] as string);
   zl.startAll();

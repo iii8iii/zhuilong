@@ -17,7 +17,9 @@ import { Result } from "../types";
 				if (parentPort) {
 					parentPort.postMessage(zx);
 				}
+				console.log('del last,zx length:', zx.length);
 				zx.pop();
+				console.log('after del,zx length:', zx.length);
 			});
 		});
 	}
