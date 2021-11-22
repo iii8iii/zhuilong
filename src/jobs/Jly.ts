@@ -3,7 +3,7 @@ import { Result, stockData } from '../types';
 import { getStockCode, reRun } from './utils';
 (async () => {
   let ports: MessagePort[] = [];
-  let result: Result = { codes: [] };
+  let result: Result = { name: 'ly', codes: [] };
   if (parentPort) {
     parentPort.on('message', msg => {
       const { from, to } = msg;

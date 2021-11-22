@@ -9,6 +9,7 @@ export interface stockData { zt: ztItem[], zzt: zuoZtItem[], qs: qsItem[], zj1: 
 export interface Port { [x: string]: MessagePort; }
 
 export interface Result {
-  codes: string[];
+  name: string,
+  codes: string[],
   zt?: boolean,
 }

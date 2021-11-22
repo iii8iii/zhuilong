@@ -4,7 +4,7 @@ import { Result, stockData } from '../types';
 
 (async () => {
   let ports: MessagePort[] = [];
-  let result: Result = { codes: [] };
+  let result: Result = { name: 'zl', codes: [] };
 
   if (parentPort) {
     parentPort.on('message', (msg) => {
