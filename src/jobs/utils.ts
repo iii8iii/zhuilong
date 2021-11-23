@@ -35,7 +35,7 @@ export function delTp<T>(tp: stockItem[], items: T[]) {
 };
 
 
-export async function reRun(fn: () => Promise<void>, msDelay = 15 * 1000) {
+export async function reRun(fn: () => Promise<void>, msDelay = 2 * 1000) {
   await fn();
   setTimeout(() => {
     reRun(fn);
