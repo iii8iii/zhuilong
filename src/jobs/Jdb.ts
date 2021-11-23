@@ -1,4 +1,4 @@
-import { get5minZfStocks, getLyStocks, getMoneyInStocks, getQsStocksInfo, getTpStocks, getZlStocks, getZtStocksInfo, getZuoZtStocksInfo } from "@iii8iii/dfcfbot";
+import { getLyStocks, getMoneyInStocks, getTpStocks, getZlStocks } from "@iii8iii/dfcfbot";
 import { MessagePort, parentPort } from "worker_threads";
 import { delTp, reRun } from "./utils";
 import { stockData } from "../types";
@@ -19,35 +19,20 @@ import { stockData } from "../types";
   let result: stockData = { zt: [], zzt: [], qs: [], zj1: [], zj3: [], zj5: [], zj10: [], wfzf: [], zl: [], ly: [] };
   reRun(async () => {
     try {
-      const zt = await getZtStocksInfo();
-      result.zt = zt.length ? zt : result.zt;
-
-      const zzt = await getZuoZtStocksInfo();
-      result.zzt = zzt.length ? delTp(tp, zzt) : result.zzt;
-
-      const qs = await getQsStocksInfo();
-      result.qs = qs.length ? delTp(tp, qs) : result.qs;
 
       const zj1 = await getMoneyInStocks(1);
       result.zj1 = zj1.length ? delTp(tp, zj1) : result.zj1;
-
-      const zj3 = await getMoneyInStocks(3);
-      result.zj3 = zj1.length ? delTp(tp, zj3) : result.zj3;
-
-      const zj5 = await getMoneyInStocks(5);
-      result.zj5 = zj1.length ? delTp(tp, zj5) : result.zj5;
-
-      const zj10 = await getMoneyInStocks(10);
-      result.zj10 = zj1.length ? delTp(tp, zj10) : result.zj10;
-
-      const wfzf = await get5minZfStocks();
-      result.wfzf = wfzf.length ? delTp(tp, wfzf) : result.wfzf;
 
       const zl = await getZlStocks();
       result.zl = zl.length ? delTp(tp, zl) : result.zl;
 
       const ly = await getLyStocks();
       result.ly = ly.length ? delTp(tp, ly) : result.ly;
+
+      console.log('ly length:', ly.length, result.ly.length);
+      console.log('zl length:', zl.length, result.zl.length);
+      console.log('zj length:', zj1.length, result.zj1.length);
+
 
       for (const port of toPorts) {
         port.postMessage(result);
