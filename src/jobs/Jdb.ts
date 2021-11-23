@@ -29,9 +29,9 @@ import { stockData } from "../types";
       const ly = await getLyStocks();
       result.ly = ly.length ? delTp(tp, ly) : result.ly;
 
-      console.log('ly length:', ly.length, result.ly.length);
-      console.log('zl length:', zl.length, result.zl.length);
-      console.log('zj length:', zj1.length, result.zj1.length);
+      console.log(Date.now(), 'ly length:', ly.length, result.ly.length);
+      console.log(Date.now(), 'zl length:', zl.length, result.zl.length);
+      console.log(Date.now(), 'zj length:', zj1.length, result.zj1.length);
 
 
       for (const port of toPorts) {
