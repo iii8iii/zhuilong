@@ -16,7 +16,7 @@ import { getStockCode, reRun } from './utils';
       if (from) {
         from.on('message', (data: stockData) => {
           let { zj1 } = data;
-          zj1 = zj1.filter(item => item.zdp > 2 && item.p < 300);
+          zj1 = zj1.filter(item => item.p < 300);
           result.codes = getStockCode(zj1);
         });
       }
