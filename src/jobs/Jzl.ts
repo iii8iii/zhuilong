@@ -1,6 +1,9 @@
 import { parentPort, MessagePort } from "worker_threads";
 import { getStockCode, reRun } from "./utils";
 import { Result, stockData } from '../types';
+import { getKlineData } from '@iii8iii/dfcfbot';
+import { macdTrend } from '@iii8iii/analysts';
+import { difference } from 'lodash';
 
 (async () => {
   let ports: MessagePort[] = [];
@@ -15,6 +18,7 @@ import { Result, stockData } from '../types';
       if (from) {
         from.on('message', async (data: stockData) => {
           let { zl } = data;
+          zl = zl.filter(item => item.zdp > 2 && item.p < 300);
           result.codes = getStockCode(zl);
         });
       }
@@ -22,6 +26,13 @@ import { Result, stockData } from '../types';
   }
 
   reRun(async () => {
+    const { codes } = result;
+    for (const code of codes) {
+      const wData = await getKlineData(code, 'W');
+      if (wData && !macdTrend(wData)) {
+        result.codes = difference(result.codes, [code]);
+      }
+    }
     for (const port of ports) {
       port.postMessage(result);
     }
