@@ -12,7 +12,8 @@ import { getStockCode, reRun } from './utils';
       }
       if (from) {
         from.on('message', (data: stockData) => {
-          const { ly } = data;
+          let { ly } = data;
+          ly = ly.filter(item => item.zdp > 2);
           result.codes = getStockCode(ly);
         });
       }
