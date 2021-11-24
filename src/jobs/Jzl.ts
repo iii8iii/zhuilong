@@ -28,8 +28,9 @@ import { difference } from 'lodash';
   reRun(async () => {
     const { codes } = result;
     for (const code of codes) {
+      const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
-      if (wData && !macdTrend(wData)) {
+      if ((wData && !macdTrend(wData)) || (dData && !macdTrend(dData, 'UP', 3))) {
         result.codes = difference(result.codes, [code]);
       }
     }
