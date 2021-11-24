@@ -97,8 +97,8 @@ export class Zhuilong {
   const zl = new Zhuilong([
     { name: 'DB', path: 'src/jobs/Jdb.ts', start: '9:20' },
     { name: 'LY', path: 'src/jobs/Jly.ts', start: '9:20', link: ['DB'] },
-    { name: 'ZL', path: 'src/jobs/Jzl.ts', start: '9:35', link: ['DB'] },
-    { name: 'ZJ', path: 'src/jobs/Jzj.ts', start: '9:35', link: ['DB'] },
+    { name: 'ZL', path: 'src/jobs/Jzl.ts', start: '9:40', link: ['DB'] },
+    { name: 'ZJ', path: 'src/jobs/Jzj.ts', start: '9:40', link: ['DB'] },
     { name: 'UD', path: 'src/jobs/update.ts', start: '9:20', link: ['ZL', 'LY', 'ZJ'] },
   ]);
   await zl.new(process.env['USER'] as string, process.env['USERPSW'] as string);
