@@ -2,7 +2,7 @@ import { parentPort, MessagePort } from "worker_threads";
 import { getStockCode, reRun } from "./utils";
 import { Result, stockData } from '../types';
 import { getKlineData } from '@iii8iii/dfcfbot';
-import { macdTrend } from '@iii8iii/analysts';
+import { highClose, highOpen, macdTrend } from '@iii8iii/analysts';
 import { difference } from 'lodash';
 
 (async () => {
@@ -30,7 +30,7 @@ import { difference } from 'lodash';
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
-      if ((wData && !macdTrend(wData)) || (dData && !macdTrend(dData, 'UP', 3))) {
+      if ((wData && !macdTrend(wData)) || (dData && (!macdTrend(dData, 'UP', 3) || !highClose(dData, 1) || !highOpen(dData)))) {
         result.codes = difference(result.codes, [code]);
       }
     }

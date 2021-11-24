@@ -1,4 +1,4 @@
-import { macdTrend } from '@iii8iii/analysts';
+import { highClose, highOpen, macdTrend } from '@iii8iii/analysts';
 import { getKlineData } from '@iii8iii/dfcfbot';
 import { difference } from 'lodash';
 import { parentPort, MessagePort } from "worker_threads";
@@ -27,7 +27,7 @@ import { getStockCode, reRun } from './utils';
     const { codes } = result;
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
-      if (dData && !macdTrend(dData, 'UP', 3)) {
+      if (dData && (!macdTrend(dData, 'UP', 3) || !highClose(dData, 1) || !highOpen(dData))) {
         result.codes = difference(result.codes, [code]);
       }
     }
