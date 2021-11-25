@@ -3,7 +3,7 @@ import { getStockCode, reRun } from "./utils";
 import { Result, stockData } from '../types';
 import { getKlineData } from '@iii8iii/dfcfbot';
 import { highClose, highOpen, macdTrend } from '@iii8iii/analysts';
-import { difference } from 'lodash';
+import { difference, union } from 'lodash';
 
 (async () => {
   let ports: MessagePort[] = [];
@@ -17,9 +17,10 @@ import { difference } from 'lodash';
       }
       if (from) {
         from.on('message', async (data: stockData) => {
-          let { zl } = data;
+          let { zl, zj1 } = data;
           zl = zl.filter(item => item.zdp > 2 && item.p < 300);
-          result.codes = getStockCode(zl);
+          zj1 = zj1.filter(item => item.p < 300);
+          result.codes = union(getStockCode(zl), getStockCode(zj1));
         });
       }
     });
