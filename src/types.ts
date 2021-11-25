@@ -8,6 +8,8 @@ export interface stockData { zt: ztItem[], zzt: zuoZtItem[], qs: qsItem[], zj1: 
 
 export interface Port { [x: string]: MessagePort; }
 
+export interface msg { codes: string[], time: number; }
+
 export interface Result {
   name: string,
   codes: string[],
