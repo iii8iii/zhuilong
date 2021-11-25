@@ -7,7 +7,7 @@ import { macdTrend } from '@iii8iii/analysts';
 
 (async () => {
   let ports: MessagePort[] = [];
-  let result: Result = { codes: [] };
+  let result: Result = { name: 'qs', codes: [] };
   let codes: string[] = [];
   if (parentPort) {
     parentPort.on('message', (msg) => {
@@ -18,8 +18,8 @@ import { macdTrend } from '@iii8iii/analysts';
       if (from) {
         from.on('message', async (data: stockData) => {
           let { qs } = data;
-          qs = qs.filter(item => item.zdp > 3 && item.nh);
-          codes = union(getStockCode(qs), codes);
+          qs = qs.filter(item => item.zdp > 3 && item.nh && item.p < 300);
+          codes = getStockCode(qs);
         });
       }
     });
