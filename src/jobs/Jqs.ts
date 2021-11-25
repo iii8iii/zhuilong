@@ -27,7 +27,7 @@ import { highOpen, macdTrend } from '@iii8iii/analysts';
 
   reRun(async () => {
     //减少运算量
-    codes = take(codes, 100);
+    codes = take(codes, 50);
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');

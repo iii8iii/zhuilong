@@ -34,8 +34,7 @@ export function delTp<T>(tp: stockItem[], items: T[]) {
   return differenceBy(items, tp, 'c');
 };
 
-
-export async function reRun(fn: () => Promise<void>, msDelay = 21 * 1000) {
+export async function reRun(fn: () => Promise<void>, msDelay = 5 * 1000) {
   await fn();
   setTimeout(() => {
     reRun(fn);
