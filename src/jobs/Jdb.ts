@@ -1,4 +1,4 @@
-import { getLyStocks, getMoneyInStocks, getTpStocks, getZlStocks } from "@iii8iii/dfcfbot";
+import { getLyStocks, getMoneyInStocks, getQsStocksInfo, getTpStocks, getZlStocks } from "@iii8iii/dfcfbot";
 import { MessagePort, parentPort } from "worker_threads";
 import { delTp, reRun } from "./utils";
 import { stockData } from "../types";
@@ -28,6 +28,9 @@ import { stockData } from "../types";
 
       const ly = await getLyStocks();
       result.ly = ly.length ? delTp(tp, ly) : result.ly;
+
+      const qs = await getQsStocksInfo();
+      result.qs = qs.length ? delTp(tp, qs) : result.qs;
 
 
       for (const port of toPorts) {

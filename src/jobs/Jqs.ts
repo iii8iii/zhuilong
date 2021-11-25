@@ -26,6 +26,8 @@ import { highOpen, macdTrend } from '@iii8iii/analysts';
   }
 
   reRun(async () => {
+    //减少运算量
+    codes = take(codes, 100);
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
@@ -36,7 +38,6 @@ import { highOpen, macdTrend } from '@iii8iii/analysts';
       }
     }
 
-    result.codes = take(result.codes, 50);
     for (const port of ports) {
       port.postMessage(result);
     }
