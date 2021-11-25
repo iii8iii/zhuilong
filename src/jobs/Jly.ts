@@ -27,7 +27,7 @@ import { getStockCode, reRun } from './utils';
     const { codes } = result;
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
-      if (dData && (!macdTrend(dData, 'UP', 3) || !highClose(dData, 1) || !highOpen(dData))) {
+      if (dData && (!macdTrend(dData, 'UP', 3) || !highClose(dData, 2) || !highOpen(dData))) {
         result.codes = difference(result.codes, [code]);
       }
     }

@@ -31,7 +31,7 @@ import { difference, union } from 'lodash';
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
-      if ((wData && !macdTrend(wData)) || (dData && (!macdTrend(dData, 'UP', 3) || !highClose(dData, 1) || !highOpen(dData)))) {
+      if ((wData && !macdTrend(wData)) || (dData && (!macdTrend(dData, 'UP', 3) || !highClose(dData, 2) || !highOpen(dData)))) {
         result.codes = difference(result.codes, [code]);
       }
     }

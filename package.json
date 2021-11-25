@@ -19,7 +19,7 @@
 	},
 	"homepage": "https://github.com/iii8iii/zhuilong#readme",
 	"dependencies": {
-		"@iii8iii/analysts": "^0.6.0",
+		"@iii8iii/analysts": "^0.6.1",
 		"@iii8iii/dfcfbot": "^1.0.6",
 		"@iii8iii/thsbot": "latest",
 		"@iii8iii/wechatbot": "latest",

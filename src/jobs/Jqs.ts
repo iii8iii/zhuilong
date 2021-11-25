@@ -1,9 +1,9 @@
 import { parentPort, MessagePort } from "worker_threads";
 import { getStockCode, reRun } from "./utils";
 import { Result, stockData } from '../types';
-import { difference, take, union } from 'lodash';
+import { difference, union } from 'lodash';
 import { getKlineData } from '@iii8iii/dfcfbot';
-import { highOpen, macdTrend } from '@iii8iii/analysts';
+import { highClose, highOpen, macdTrend } from '@iii8iii/analysts';
 
 (async () => {
   let ports: MessagePort[] = [];
@@ -26,12 +26,10 @@ import { highOpen, macdTrend } from '@iii8iii/analysts';
   }
 
   reRun(async () => {
-    //减少运算量
-    codes = take(codes, 50);
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
-      if (dData && wData && macdTrend(wData) && macdTrend(dData) && highOpen(dData)) {
+      if (dData && wData && macdTrend(wData) && macdTrend(dData) && highOpen(dData) && highClose(dData)) {
         result.codes = union([code], result.codes);
       } else {
         result.codes = difference(result.codes, [code]);
