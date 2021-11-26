@@ -95,10 +95,10 @@ export class Zhuilong {
 //make a test
 (async () => {
   const zl = new Zhuilong([
-    { name: 'DB', path: 'src/jobs/Jdb.ts', start: '9:20' },
+    { name: 'DB', path: 'src/jobs/Jdb.ts', start: '9:20', end: { h: 19, m: 40 } },
     { name: 'LY', path: 'src/jobs/Jly.ts', start: '9:20', end: { h: 9, m: 40 }, link: ['DB'] },
     { name: 'ZL', path: 'src/jobs/Jzl.ts', start: '9:41', end: { h: 14, m: 30 }, link: ['DB'] },
-    { name: 'QS', path: 'src/jobs/Jqs.ts', start: '14:31', link: ['DB'] },
+    { name: 'QS', path: 'src/jobs/Jqs.ts', start: '14:31', end: { h: 19, m: 40 }, link: ['DB'] },
     { name: 'UD', path: 'src/jobs/update.ts', start: '9:20', link: ['LY', 'ZL', 'QS'] }
   ]);
   await zl.new(process.env['USER'] as string, process.env['USERPSW'] as string);
