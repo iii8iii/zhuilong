@@ -3,7 +3,7 @@ import { getStockCode, reRun } from "./utils";
 import { Result, stockData } from '../types';
 import { difference, union } from 'lodash';
 import { getKlineData } from '@iii8iii/dfcfbot';
-import { highClose, highOpen, macdTrend } from '@iii8iii/analysts';
+import { highClose, macdTrend } from '@iii8iii/analysts';
 
 (async () => {
   let ports: MessagePort[] = [];
@@ -29,7 +29,7 @@ import { highClose, highOpen, macdTrend } from '@iii8iii/analysts';
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
-      if (dData && wData && macdTrend(wData) && macdTrend(dData) && highOpen(dData) && highClose(dData, 4)) {
+      if (dData && wData && macdTrend(wData) && macdTrend(dData) && highClose(dData)) {
         result.codes = union([code], result.codes);
       } else {
         result.codes = difference(result.codes, [code]);
