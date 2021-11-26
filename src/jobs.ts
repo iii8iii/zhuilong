@@ -14,7 +14,7 @@ export function shedule(jobs: Job[], handler: (message: any, c: string) => void)
 		let w = {
 			name: job.name,
 			worker: { workerData: { __filename: job.path } },
-			timeout: 0,
+			timeout: `after ${job.start}`,
 			path: typescript_worker,
 			interval: `at ${job.start} every weekday`
 		};
