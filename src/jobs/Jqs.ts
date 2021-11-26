@@ -18,7 +18,7 @@ import { highClose, highOpen, macdTrend } from '@iii8iii/analysts';
       if (from) {
         from.on('message', async (data: stockData) => {
           let { qs } = data;
-          qs = qs.filter(item => item.zdp > 3 && item.nh && item.p < 300);
+          qs = qs.filter(item => item.zdp > 5 && item.nh && item.p < 300);
           codes = getStockCode(qs);
         });
       }

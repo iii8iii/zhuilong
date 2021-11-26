@@ -18,7 +18,7 @@ import { difference, union } from 'lodash';
       if (from) {
         from.on('message', async (data: stockData) => {
           let { zl, zj1 } = data;
-          zl = zl.filter(item => item.zdp > 2 && item.p < 300);
+          zl = zl.filter(item => item.zdp > 3 && item.p < 300);
           zj1 = zj1.filter(item => item.p < 300);
           result.codes = union(getStockCode(zl), getStockCode(zj1));
         });
