@@ -29,7 +29,7 @@ import { highClose, macdTrend } from '@iii8iii/analysts';
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
-      if (dData && wData && macdTrend(wData) && macdTrend(dData) && highClose(dData)) {
+      if (dData && wData && macdTrend(wData) && macdTrend(dData, 'UP', 3) && highClose(dData, 3)) {
         result.codes = union([code], result.codes);
       } else {
         result.codes = difference(result.codes, [code]);
