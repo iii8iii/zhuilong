@@ -41,7 +41,6 @@ import { msg, Result } from "../types";
 		});
 		if (parentPort) {
 			parentPort.postMessage(zx);
-			zx = [];
 		}
 	});
 })();
