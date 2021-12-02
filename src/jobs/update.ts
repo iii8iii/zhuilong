@@ -33,7 +33,7 @@ import { msg, Result } from "../types";
 		//将从目前确定的自选数据中剔除包含在这条记录中的所有编码
 		//并将此记录从记录表中删除
 		records.forEach((v, k) => {
-			if (now - v.time > 1000 * 300) {
+			if (now - v.time > 1000 * 100) {
 				zx = difference(zx, v.codes);
 				records.delete(k);
 				console.log('CLEAN CODES FROM JOB: ', k);

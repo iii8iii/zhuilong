@@ -37,7 +37,10 @@ import { highClose, ljxt, macdTrend } from '@iii8iii/analysts';
     }
 
     for (const port of ports) {
-      port.postMessage(result);
+      if (result.codes.length) {
+        port.postMessage(result);
+      }
+      result.codes = [];
     }
   });
 })();
