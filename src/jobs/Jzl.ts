@@ -28,7 +28,6 @@ import { difference, union } from 'lodash';
   }
 
   reRun(async () => {
-    const { codes } = result;
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
       const wData = await getKlineData(code, 'W');
