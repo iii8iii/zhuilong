@@ -18,7 +18,7 @@ import { highClose, ljxt } from '@iii8iii/analysts';
       if (from) {
         from.on('message', async (data: stockData) => {
           let { qs } = data;
-          qs = qs.filter(item => item.nh && item.p / 100 < 300);
+          qs = qs.filter(item => item.p / 100 < 300);
           codes = getStockCode(qs);
         });
       }
