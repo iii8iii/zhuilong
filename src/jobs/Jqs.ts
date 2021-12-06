@@ -3,7 +3,7 @@ import { getStockCode, reRun } from "./utils";
 import { Result, stockData } from '../types';
 import { difference, union } from 'lodash';
 import { getKlineData } from '@iii8iii/dfcfbot';
-import { highClose, ljxt, macdTrend } from '@iii8iii/analysts';
+import { highClose, ljxt } from '@iii8iii/analysts';
 
 (async () => {
   let ports: MessagePort[] = [];
@@ -18,7 +18,7 @@ import { highClose, ljxt, macdTrend } from '@iii8iii/analysts';
       if (from) {
         from.on('message', async (data: stockData) => {
           let { qs } = data;
-          qs = qs.filter(item => item.p / 100 < 300);
+          qs = qs.filter(item => item.nh && item.p / 100 < 300);
           codes = getStockCode(qs);
         });
       }
@@ -28,8 +28,7 @@ import { highClose, ljxt, macdTrend } from '@iii8iii/analysts';
   reRun(async () => {
     for (const code of codes) {
       const dData = await getKlineData(code, 'D');
-      const wData = await getKlineData(code, 'W');
-      if (dData && wData && macdTrend(wData) && macdTrend(dData, 'UP', 3) && ljxt(dData) && highClose(dData, 2.5)) {
+      if (dData && ljxt(dData) && highClose(dData, 3)) {
         result.codes = union([code], result.codes);
       } else {
         result.codes = difference(result.codes, [code]);
